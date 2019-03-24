@@ -32,6 +32,10 @@ new Vue({
       this.monsterHealth -= pDam
       this.playerHealth -= mDam
 
+      if (this.checkVictory()) {
+        return
+      }
+
       this.actions.unshift({
         text: `PLAYER HITS MONSTER FOR ${pDam}`,
         class: 'player-turn'
@@ -44,6 +48,10 @@ new Vue({
 
       this.playerHealth += pDam
       this.playerHealth -= mDam
+
+      if (this.checkVictory()) {
+        return
+      }
 
       this.actions.unshift({
         text: `PLAYER HEALS FOR ${pDam}`,
@@ -58,11 +66,34 @@ new Vue({
       this.monsterHealth -= pDam
       this.playerHealth -= mDam
 
+      if (this.checkVictory()) {
+        return
+      }
+
       this.actions.unshift({
         text: `PLAYER HITS MONSTER FOR ${pDam}`,
         class: 'player-turn'
       })
       monsterAttack(this.actions, mDam)
+    },
+    checkVictory() {
+      if (this.monsterHealth <= 0) {
+        if (confirm('You won!! Do you want to restart the game?')) {
+          this.startNewGame()
+        } else {
+          this.gameStarted = false
+        }
+        return true
+      }
+      if (this.playerHealth <= 0) {
+        if (confirm('You lost. Do you want to restart the game?')) {
+          this.startNewGame()
+        } else {
+          this.gameStarted = false
+        }
+        return true
+      }
+      return false
     }
   }
 })
